@@ -13,7 +13,7 @@ var CONNECTION_MONGOATLAS = "mongodb+srv://jameskevinramesessystems:Qu3u3ingW3b@
 var CONNECTION_MONGOCOMPASS = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.4"
 
 
-var DATABASE_NAME = "test";
+var DATABASE_NAME = "test1";
 var database;
 
 app.listen(5038, () => {
@@ -23,13 +23,13 @@ app.listen(5038, () => {
             return;
         }
         database = client.db(DATABASE_NAME);
-        console.log("Mongo DB Connection Successful");
+        console.log("Mongo DB Connection Successfuwl");
     });
 });
 
-app.get('/api/getData', (request, response) => {
-    console.log('GET /api/getData');
-    database.collection("products").find({}).toArray((error, result) => {
+app.get('/api/todoapp/GetNotes', (request, response) => {
+    console.log('GET /api/todoapp/GetNotes');
+    database.collection("examplecollection").find({}).toArray((error, result) => {
         if (error) {
             console.error("Error retrieving products:", error);
             response.status(500).send("Error retrieving products");
@@ -42,19 +42,17 @@ app.get('/api/getData', (request, response) => {
 
 
 
-app.post('/api/addData', multer().none(), (request, response) => {
-    console.log('POST /api/postData', request.body);
-    database.collection("queueingwebcollection").countDocuments({}, function (error, numOfDocs) {
+app.post('/api/todoapp/AddNotes', multer().none(), (request, response) => {
+    console.log('POST /api/todoapp/AddNotes', request.body);
+    database.collection("examplecollection").countDocuments({}, function (error, numOfDocs) {
         if (error) {
             console.error("Error counting documents:", error);
             response.status(500).send("Error counting documents");
             return;
         }
-        database.collection("queueingwebcollection").insertOne({
+        database.collection("examplecollection").insertOne({
             id: (numOfDocs + 1).toString(),
-            hfcolor: request.body.newHfColors,
-            maincolor: request.body.newMainColors,
-            wincolor: request.body.newWinColors
+            description: request.body.description,
         }, (error, result) => {
             if (error) {
                 console.error("Error inserting document:", error);
@@ -67,9 +65,9 @@ app.post('/api/addData', multer().none(), (request, response) => {
     });
 });
 
-app.delete('/api/deleteData', (request, response) => {
+app.delete('/api/todoapp/DeleteNotes', (request, response) => {
     console.log('DELETE deleteData', request.query);
-    database.collection("queueingwebcollection").deleteOne({
+    database.collection("examplecollection").deleteOne({
         id: request.query.id
     }, (error, result) => {
         if (error) {
