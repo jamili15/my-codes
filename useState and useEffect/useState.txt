@@ -1,0 +1,57 @@
+// FORM
+
+ const [form, setFom] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+  });
+
+
+const handleChange = (e: any) => {
+    setFom((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+return (
+	 <input type="text" name="firstName" onChange={handleChange} />
+          <input type="text" name="lastName" onChange={handleChange} />
+          <input type="text" name="address" onChange={handleChange} />
+          {form.firstName}
+          {form.lastName}
+          {form.address}
+
+)
+
+
+______________________________________________________________
+
+//COUNT
+
+const [count, setCount] = useState(0);
+
+
+
+ const handleCount = () => {
+    setCount((prev) => prev + 1);
+  };
+
+
+  {count}
+          <Button onClick={handleCount}>up</Button>
+
+
+
+
+
+ const [count, setCount] = useState(0);
+
+   useEffect(() => {
+    const interval = setInterval(() => {
+      setCount((prevCount) => prevCount + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  console.log("count", count);
+

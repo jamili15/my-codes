@@ -1,0 +1,76 @@
+import React, { useState } from "react";
+import { useKeyboardContext } from "@/components/keyboard/KeyboardContext";
+import Input from "../../ui/Input";
+import Numbers from "../../ui/Numbers";
+import Subtitle from "../../ui/Subtitle";
+import Title from "../../ui/Title";
+
+interface PaymentInformationProps {
+  billAmount: number;
+}
+
+const PaymentInformation: React.FC<PaymentInformationProps> = ({
+  billAmount,
+}) => {
+  const { activeInput } = useKeyboardContext();
+
+  // State to manage input values
+  const [paidByName, setPaidByName] = useState<string>("");
+  const [paidByAddress, setPaidByAddress] = useState<string>("");
+
+  // Log entered data to the console
+  const handleSubmit = () => {
+    console.log("Submitted Data:");
+    console.log("Paid by Name:", paidByName);
+    console.log("Paid by Address:", paidByAddress);
+    // Add logic here to handle the submitted data, e.g., making an API call
+  };
+
+  return (
+    <div>
+      <div className="flex flex-col justify-center text-center items-center">
+        <Title text={"Confirm Transaction"} className="text-[50px]" />
+        <Subtitle
+          text={
+            "Please Confirm and Fill up name and address of the payer for your electronic official receipt and click Next to proceed for payment"
+          }
+          className="text-[25px] leading-normal p-5"
+        />
+      </div>
+      <div className="flex flex-col gap-8 text-[28px]">
+        <Input
+          label="Paid by Name"
+          translationDown="translate-y-6"
+          className="w-full !p-4 text-[40px] text-start border-b-2 border-black rounded-none"
+          value={paidByName}
+          onChange={(e) => setPaidByName(e.target.value)}
+        />
+        <Input
+          label="Paid by Address"
+          translationDown="translate-y-6"
+          className="w-full !p-4 text-[40px] text-start border-b-2 border-black rounded-none"
+          value={paidByAddress}
+          onChange={(e) => setPaidByAddress(e.target.value)}
+        />
+      </div>
+      <div className="m-2 text-center flex justify-center items-center flex-col gap-4 pt-10">
+        <Subtitle text={"Payment Details"} />
+        <div className="border border-black font-bold w-[70%] p-8">
+          <Numbers text="Php " number={billAmount} />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <div className="text-center">
+        <button
+          className="bg-blue-500 text-white p-3 rounded"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default PaymentInformation;

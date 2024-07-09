@@ -1,0 +1,458 @@
+## first thing to do is create service and import the libs file
+
+// service/api/[filename].tsx
+
+import { makeRequest } from "@/libs/fetch";
+
+export const getBilling = (refno = {}) => {
+  return makeRequest("/api/rpt/billing", {
+    method: "GET",
+    data: refno,
+  });
+};
+
+_________________________________________________________________________
+
+## second is create api
+
+
+// api/rpt/[filename].tsx
+
+
+//pages/api/rpt/billing.tsx
+import Service from "@/libs/remote-service";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === "GET") {
+    return GET(req, res);
+  }
+  return res.status(500).json({ code: "01", error: "Method not available." });
+}
+
+async function GET(req: NextApiRequest, res: NextApiResponse) {
+  const { refno } = req.query;
+  const { showdetails } = req.query;
+  const { billtoyear } = req.query;
+  const { billtoqtr } = req.query;
+  const svc = Service.lookup("gdx/OnlineLandTaxBillingService", "etracs");
+
+  try {
+    const response = await svc.invoke("getBilling", {
+      refno,
+      showdetails,
+      billtoyear,
+      billtoqtr,
+    });
+    console.log(response, refno, showdetails, billtoyear, billtoqtr);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching billing data:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+
+_______________________________________________________________________________
+
+
+## 3rd create Context
+
+// service/context/[filename-context].tsx
+
+
+// TaxBillingContext.js
+import React, { ReactNode, createContext, useContext, useState } from "react";
+
+interface TaxBillingContextProps {
+  children: React.ReactNode;
+}
+
+interface TaxBillingContext {
+  taxBillingInfo: any;
+  selectedOption: number | string | null;
+  selectedOptionYear: number | string | null;
+  payerName: string;
+  payerAddress: string;
+  code: string;
+  section: string;
+  setTaxBillingInfo: (data: any) => void;
+  setSelectedOption: (option: number | string | null) => void;
+  setSelectedOptionYear: (optionYear: number | string | null) => void;
+  setPayerName: (name: string) => void;
+  setPayerAddress: (address: string) => void;
+  setCode: (code: string) => void;
+  setSection: (section: string) => void;
+}
+
+const TaxBillingContext = createContext<TaxBillingContext | undefined>(
+  undefined
+);
+
+export const RptBillingProvider: React.FC<TaxBillingContextProps> = ({
+  children,
+}) => {
+  const [taxBillingInfo, setTaxBillingInfo] = useState();
+  const [selectedOption, setSelectedOption] = useState<number | string | null>(
+    null
+  );
+  const [selectedOptionYear, setSelectedOptionYear] = useState<
+    number | string | null
+  >(null);
+
+  const [payerName, setPayerName] = useState("");
+  const [payerAddress, setPayerAddress] = useState("");
+  const [code, setCode] = useState("");
+  const [section, setSection] = useState("");
+
+  const handleSetSelectedOption = (option: number | string | null) => {
+    if (option === 1 || option === 2 || option === 3) {
+      setSelectedOption(`${option}`);
+    } else {
+      setSelectedOption(option);
+    }
+  };
+
+  const handleSetSelectedOptionYear = (optionYear: number | string | null) => {
+    if (optionYear === 2024 || optionYear === 2025 || optionYear === 2026) {
+      setSelectedOptionYear(`${optionYear}`);
+    } else {
+      setSelectedOptionYear(optionYear);
+    }
+  };
+
+  return (
+    <TaxBillingContext.Provider
+      value={{
+        taxBillingInfo,
+        selectedOption,
+        selectedOptionYear,
+        payerName,
+        code,
+        section,
+        payerAddress,
+        setTaxBillingInfo,
+        setSelectedOption: handleSetSelectedOption,
+        setSelectedOptionYear: handleSetSelectedOptionYear,
+        setPayerName,
+        setPayerAddress,
+        setCode,
+        setSection,
+      }}
+    >
+      {children}
+    </TaxBillingContext.Provider>
+  );
+};
+
+export const useTaxBillingContext = (): TaxBillingContext => {
+  const context = useContext(TaxBillingContext);
+  if (!context) {
+    throw new Error(
+      "useTaxBillingContext must be used within a TaxBillingProvider"
+    );
+  }
+  return context;
+};
+
+
+_____________________________________________________________________________________
+
+
+## last call the context, and service
+
+// index.tsx or page.tsx
+
+
+
+import Button from "@/components/ui/Button";
+import Images from "@/components/ui/Images";
+import Title from "@/components/ui/Title";
+import { createFetch } from "@/libs/fetch";
+import { generateCode } from "@/services/api/rptgenerate";
+import { fetchNextSeries } from "@/services/api/queue";
+import { useTaxBillingContext } from "@/services/context/rpt-context";
+import paymentTypeData from "@/stores/paymenttypeitems";
+import React, { useEffect } from "react";
+import PaymentTicket from "../ticket/PaymentTicket";
+
+const useModal = (exeFetchTicket: any, valGenerateCode: any) => {
+  const [openTicket, setOpenTicket] = React.useState(false);
+  const [modalContent, setModalContent] = React.useState<any>(null);
+
+  const handleOpenTicket = (content: any) => {
+    setModalContent(content);
+    setOpenTicket(true);
+    exeFetchTicket({
+      sectionid: valGenerateCode?.queuesection || "",
+    });
+  };
+
+  const handleCloseTicket = () => {
+    setModalContent(null);
+    setOpenTicket(false);
+  };
+
+  return { openTicket, handleOpenTicket, handleCloseTicket, modalContent };
+};
+
+const PaymentType = () => {
+  const { taxBillingInfo, selectedOption } = useTaxBillingContext();
+  const { value: valGenerateCode, execute: exeGenerateCode } =
+    createFetch(generateCode);
+  const { value: valFetchTicket, execute: exeFetchTicket } =
+    createFetch(fetchNextSeries);
+  const { openTicket, handleOpenTicket, handleCloseTicket, modalContent } =
+    useModal(exeFetchTicket, valGenerateCode);
+
+  useEffect(() => {
+    exeGenerateCode({
+      refno: taxBillingInfo.tdno,
+      txntype: "rpt",
+      billtoqtr: selectedOption,
+    });
+  }, []);
+
+  console.log(selectedOption, "rpt", valGenerateCode);
+
+  return (
+    <div className="flex flex-col justify-center text-center items-center gap-y-20">
+      <Title
+        text={"Choose preferred payment type"}
+        textSize="text-5xl uppercase"
+      />
+      <div>
+        {paymentTypeData.map(
+          (info, index) =>
+            !info.disabled && (
+              <Button
+                key={index}
+                onClick={() => handleOpenTicket(info.modalcontent)}
+                classname="border-none"
+              >
+                <Images img={info.image} />
+                <Title text={info.title} />
+              </Button>
+            )
+        )}
+
+        {modalContent && (
+          <PaymentTicket
+            isOpen={openTicket}
+            onClose={handleCloseTicket}
+            rpttxntype={valGenerateCode?.code}
+            seriesno={valFetchTicket?.ticketno}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default PaymentType;
+
+
+___________________________________________________________________________________________________________
+
+
+
+/* eslint-disable react-hooks/rules-of-hooks */
+import Button from "@/components/ui/Button";
+import Images from "@/components/ui/Images";
+import Subtitle from "@/components/ui/Subtitle";
+import Title from "@/components/ui/Title";
+import { useTaxBillingContext } from "@/services/context/rpt-context";
+import { useStepper } from "@/services/context/stepper-context";
+import React, { useRef } from "react";
+import { MdOutlineClose } from "react-icons/md";
+import QRCode from "react-qr-code";
+import { useReactToPrint } from "react-to-print";
+import PaymentTicketPrint from "./PaymentTicketPrint";
+
+interface PaymentTicketProps {
+  isOpen: boolean;
+  onClose?: () => void;
+  showClose?: string;
+  rpttxntype?: string;
+  seriesno?: string;
+}
+
+const PaymentTicket: React.FC<PaymentTicketProps> = ({
+  isOpen,
+  onClose,
+  showClose,
+  rpttxntype,
+  seriesno,
+}) => {
+  const { goToPrevStep } = useStepper();
+  const [isPrinting, setIsPrinting] = React.useState(false);
+  const componentRef = useRef<any>();
+  const { taxBillingInfo, payerName, payerAddress } = useTaxBillingContext();
+  const combinedData = `${rpttxntype}\n&paidby=${payerName}&paidbyaddress=${payerAddress}`;
+  const headers = [
+    "trxn date",
+    "payer",
+    "address",
+    "particulars",
+    "control no.",
+    "total",
+  ];
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    onBeforeGetContent: () => {
+      setIsPrinting(true);
+    },
+    onAfterPrint: () => {
+      setIsPrinting(false);
+      onClose && onClose();
+    },
+  });
+
+  return (
+    <>
+      <div className="hidden">
+        <PaymentTicketPrint
+          ref={componentRef}
+          img={"/images/province-logo.png"}
+          QRCode={<QRCode value={combinedData} size={70} />}
+          addr={payerAddress}
+          total={taxBillingInfo.amount}
+          QRData={combinedData}
+          billDate={taxBillingInfo.billdate}
+          payerName={payerName}
+          particular="Real Tax Billing and Payment"
+          seriesno={seriesno}
+        />
+      </div>
+      <div
+        className={`fixed top-0 left-0 w-full h-full bg-[#00000080] flex flex-col justify-center items-center z-[1]`}
+      >
+        <div className="w-[60%] relative flex flex-col items-center bg-white p-4 rounded-2xl z-10">
+          <div className={`flex justify-end w-full ${showClose}`}>
+            <Button onClick={onClose} classname="text-[#333] border-none !px-0">
+              <MdOutlineClose size={50} />
+            </Button>
+          </div>
+          {isPrinting ? (
+            <div className="flex flex-col items-center justify-center pb-20 gap-10">
+              <div className="w-12 h-12 relative animate-spin ">
+                {[0, 90, 180, 260].map((rotation) => (
+                  <div
+                    key={rotation}
+                    className={`w-4 h-4 bg-blue-500 rounded-full absolute ${
+                      rotation < 180 ? "top-0" : "bottom-0"
+                    } ${
+                      rotation % 180 === 0 ? "left-0" : "right-0"
+                    } animate-pulse`}
+                  ></div>
+                ))}
+              </div>
+              <Title
+                text={"Printing Ticket"}
+                classname="!text-[25px] !leading-[0px]"
+              />
+              <Subtitle
+                text={" Please wait while your ticket is being printed."}
+                classname="text-[20px] !leading-[0px]"
+              />
+            </div>
+          ) : (
+            <>
+              <div className="w-full flex flex-col gap-y-10">
+                <div className="w-full flex justify-center items-center">
+                  <Images
+                    img={"/images/province-logo.png"}
+                    width={110}
+                    height={110}
+                    classname=" absolute top-24 left-10"
+                  />
+                  <div className="flex flex-col w-72 ">
+                    <Title
+                      text={"republic of the philipines"}
+                      classname="uppercase text-lg leading-5"
+                    />
+                    <Title
+                      text={"province of bohol"}
+                      classname="uppercase text-lg leading-5"
+                    />
+                    <Title
+                      text={"city of tagbilaran"}
+                      classname="uppercase text-lg leading-5"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-x-10 justify-center">
+                  <div className="relative">
+                    <div className="h-[20px] w-[4px] bg-black absolute top-[-12px] left-[-12px] rounded-full" />
+                    <div className="h-[4px] w-[40px] bg-black absolute top-[-12px] left-[-12px] rounded-full" />
+                    <QRCode
+                      className="break-words"
+                      value={combinedData}
+                      size={90}
+                    />
+                    <div className="h-[20px] w-[4px] bg-black absolute bottom-[-12px] right-[-12px] rounded-full" />
+                    <div className="h-[4px] w-[40px] bg-black absolute bottom-[-12px] right-[-12px] rounded-full" />
+                  </div>
+                  <div className="w-[2px] bg-black"></div>
+                  <div className="uppercase">
+                    <Title text={"Queue No"} />
+                    <Title text={seriesno} />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Title
+                    text="present this receipt to the collector"
+                    classname="uppercase"
+                    textSize="text-xl"
+                  />
+                  <div className="flex justify-center gap-12">
+                    <table>
+                      <tbody>
+                        {headers.map((label, index) => (
+                          <tr key={index}>
+                            <td className="text-start text-[15px] leading-6 capitalize">
+                              {label}
+                            </td>
+                            <td className="text-start text-[15px] leading-6 font-semibold">
+                              {
+                                [
+                                  taxBillingInfo.billdate
+                                    ? `: ${taxBillingInfo.billdate}`
+                                    : "",
+                                  `: ${payerName}`,
+                                  payerAddress ? `: ${payerAddress}` : "",
+                                  ": Real Tax Billing and Payment",
+                                  combinedData ? `: ${combinedData}` : "",
+                                  taxBillingInfo.amount
+                                    ? `: ${taxBillingInfo.amount}`
+                                    : "",
+                                ][index]
+                              }
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <Button buttonText="Print" onClick={handlePrint} />
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default PaymentTicket;
+
+
+
+

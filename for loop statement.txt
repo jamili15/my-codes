@@ -1,0 +1,40 @@
+ const columns = [];
+
+  if (horizontalCols > 2) {
+    for (let i = 2; i < horizontalCols; i++) {
+      columns.push("_260px");
+    }
+  }
+
+  const columnNum = columns.join("");
+
+
+
+
+
+// Example 1: Basic for loop iterating from 1 to 5
+for (let i = 1; i <= 5; i++) {
+  console.log(i); // Output: 1, 2, 3, 4, 5
+}
+
+// Example 2: Iterating over an array
+const fruits = ["apple", "banana", "cherry"];
+for (let i = 0; i < fruits.length; i++) {
+  console.log(fruits[i]); // Output: "apple", "banana", "cherry"
+}
+
+// Example 3: Skipping iterations with continue
+for (let i = 1; i <= 5; i++) {
+  if (i === 3) {
+    continue; // Skip iteration if i equals 3
+  }
+  console.log(i); // Output: 1, 2, 4, 5
+}
+
+// Example 4: Breaking out of a loop with break
+for (let i = 1; i <= 5; i++) {
+  if (i === 4) {
+    break; // Exit the loop when i equals 4
+  }
+  console.log(i); // Output: 1, 2, 3
+}

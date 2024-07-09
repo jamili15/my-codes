@@ -1,0 +1,52 @@
+import React, { useState, useEffect } from "react";
+
+const BarcodePage: React.FC = () => {
+  const [scannedData, setScannedData] = useState<string | null>(null);
+  const [bufferedData, setBufferedData] = useState<string>("");
+  const [scanning, setScanning] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleBarcodeInput = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        // Show loading indicator during processing
+        setScanning(true);
+
+        // Simulate an asynchronous operation (e.g., fetching data from a server)
+        setTimeout(() => {
+          setScannedData(bufferedData);
+          setBufferedData("");
+          setScanning(false);
+        }, 1000); // Adjust the delay based on your needs
+      } else {
+        setBufferedData((prevData) => prevData + event.key);
+      }
+    };
+
+    window.addEventListener("keydown", handleBarcodeInput);
+
+    return () => {
+      window.removeEventListener("keydown", handleBarcodeInput);
+    };
+  }, [bufferedData]);
+
+  return (
+    <div>
+      <h1 className="flex items-center justify-center p-10 uppercase text-4xl font-bold">
+        Barcode & QRcode Scanner Page
+      </h1>
+
+      {scanning && (
+        <p className="text-center text-xl font-semibold">Scanning...</p>
+      )}
+
+      {scannedData && !scanning && (
+        <div className="pl-5 capitalize text-xl font-semibold">
+          <p className="font-bold uppercase text-2xl pr-2">Scanned Data:</p>
+          <p>{scannedData}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default BarcodePage;

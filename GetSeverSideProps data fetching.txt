@@ -1,0 +1,85 @@
+// pages/index.tsx
+import { GetServerSideProps } from "next";
+import axios from "axios";
+import { ExampleData } from "../types/types";
+
+interface HomeProps {
+  data: ExampleData[];
+}
+
+const Home: React.FC<HomeProps> = ({ data }) => {
+  return (
+    <div>
+      <h1>Server-Side Rendered Page</h1>
+      <ul>
+        {data.map((item) => (
+          <li key={item.id}>{item.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  // Fetch data from the server at request time
+  const response = await axios.get("http://localhost:3005/posts");
+  const data: ExampleData[] = response.data;
+
+  return {
+    props: { data },
+  };
+};
+
+export default Home;
+
+
+
+// pages/index.tsx without axios
+import { GetServerSideProps } from "next";
+import axios from "axios";
+import { ExampleData } from "../types/types";
+
+interface HomeProps {
+  data: ExampleData[];
+}
+
+const Home: React.FC<HomeProps> = ({ data }) => {
+  return (
+    <div>
+      <h1>Server-Side Rendered Page</h1>
+      <div>
+        {data.map((item) => (
+          <div key={item.id}>
+            <div>{item.qr} </div>
+            <div>{item.title} </div>
+            <div>{item.content} </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  // Fetch data from the server at request time
+  const response = await fetch("http://localhost:3005/posts");
+  const data: ExampleData[] = await response.json();
+
+  return {
+    props: { data },
+  };
+};
+
+export default Home;
+
+
+
+
+
+// types/types.ts
+export interface ExampleData {
+  title: string;
+  id: number;
+  name: string;
+}
+

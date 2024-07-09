@@ -1,0 +1,6 @@
+//create run.bat file
+
+
+@echo off
+start /min npm run start
+timeout /nobreak /t 2 >nul

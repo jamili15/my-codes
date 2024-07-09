@@ -1,0 +1,26 @@
+Logical OR (||)
+Usage: expr1 || expr2
+Meaning: Returns expr1 if it is truthy; otherwise, returns expr2.
+Example: true || false results in true, while false || true results in true.
+Nullish Coalescing Operator (??)
+Usage: expr1 ?? expr2
+Meaning: Returns expr1 if it is not null or undefined; otherwise, returns expr2.
+Example: null ?? 'default' results in 'default', while 0 ?? 'default' results in 0.
+Logical AND (&&)
+Usage: expr1 && expr2
+Meaning: Returns expr1 if it is falsy; otherwise, returns expr2.
+Example: true && false results in false, while true && true results in true.
+Strict Equality (===)
+Usage: expr1 === expr2
+Meaning: Checks if expr1 and expr2 are equal in both value and type.
+Example: 1 === 1 results in true, while 1 === '1' results in false.
+Strict Inequality (!==)
+Usage: expr1 !== expr2
+Meaning: Checks if expr1 and expr2 are not equal in value or type.
+Example: 1 !== '1' results in true, while 1 !== 1 results in false.
+
+
+<= is used to check if a value is less than or equal to another.
+>= is used to check if a value is greater than or equal to another.
+< (Less than):
+> (Greater than):

@@ -1,0 +1,45 @@
+npm install qrcode.react
+
+
+// components/QRCodeGenerator.tsx
+import { useState } from "react";
+import QRCode from "qrcode.react";
+
+const QRCodeGenerator: React.FC = () => {
+  const [text, setText] = useState("");
+
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setText(event.target.value);
+  };
+
+  return (
+    <div>
+      <h2>QR Code Generator</h2>
+      <input
+        type="text"
+        placeholder="Enter text for QR code"
+        value={text}
+        onChange={handleTextChange}
+      />
+      {text && <QRCode value={text} />}
+    </div>
+  );
+};
+
+export default QRCodeGenerator;
+
+
+// pages/index.tsx
+import QRCodeGenerator from "../components/QRCodeGenerator";
+
+const Home: React.FC = () => {
+  return (
+    <div>
+      <h1>QR Code Generator App</h1>
+      <QRCodeGenerator />
+    </div>
+  );
+};
+
+export default Home;
+

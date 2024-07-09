@@ -1,0 +1,129 @@
+// components/Template.tsx
+import React from "react";
+import Head from "next/head";
+
+interface TemplateProps {
+  title: string;
+  description?: string;
+  templateType: "template1" | "template2" | "template3";
+  children: React.ReactNode;
+}
+
+const Template: React.FC<TemplateProps> = ({
+  title,
+  description,
+  templateType,
+  children,
+}) => {
+  const renderMainContent = (type: string) => {
+    return React.Children.map(children, (child) => {
+      if (React.isValidElement(child)) {
+        const { componentType } = child.props;
+        if (type === componentType) {
+          switch (type) {
+            case "header":
+              // Add any specific styling or logic for Header component
+              return <div className="header-wrapper">{child}</div>;
+            case "footer":
+              // Add any specific styling or logic for Footer component
+              return <div className="footer-wrapper">{child}</div>;
+            default:
+              return child;
+          }
+        }
+      }
+      return null;
+    });
+  };
+
+  let bgColor,
+    headerColor,
+    footerColor,
+    sidebarBgColor,
+    sidebarSwitch,
+    justifyContent;
+
+  if (templateType === "template1") {
+    bgColor = "bg-green-100";
+    headerColor = "#0a5366";
+    justifyContent = "justify-end";
+    footerColor = "bg-green-200";
+    sidebarBgColor = "bg-green-300";
+    sidebarSwitch = " flex-row-reverse";
+  } else if (templateType === "template2") {
+    bgColor = "bg-blue-100";
+    headerColor = "#0a5366";
+    footerColor = "bg-blue-200";
+    sidebarBgColor = "bg-blue-300";
+    sidebarSwitch = " flex-row";
+  } else if (templateType === "template3") {
+    bgColor = "bg-red-100";
+    headerColor = "#0a5366";
+    footerColor = "bg-red-200";
+    sidebarBgColor = "bg-red-300";
+  }
+
+  return (
+    <div className={`min-h-screen ${bgColor} flex flex-col`}>
+      <Head>
+        <title>{title}</title>
+        {description && <meta name="description" content={description} />}
+      </Head>
+
+      {/* Header */}
+      <header className={`${headerColor} ${justifyContent} flex p-4`}>
+        {renderMainContent("header")}
+      </header>
+
+      {/* Main Content and Sidebar */}
+      <div className={`flex flex-grow ${sidebarSwitch}`}>
+        {/* Left Sidebar */}
+        <aside className={`w-1/4 ${sidebarBgColor} p-4`}>
+          Left Sidebar ContentLeft Sidebar Content
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-grow p-4"> {renderMainContent("main")}</main>
+
+        {/* Right Sidebar */}
+        <aside className={`w-1/4 ${sidebarBgColor} p-4`}>
+          Right Sidebar Content
+        </aside>
+      </div>
+
+      {/* Footer */}
+      <footer
+        className={`${footerColor} ${justifyContent} flex p-4 text-center`}
+      >
+        {renderMainContent("footer")}
+      </footer>
+    </div>
+  );
+};
+
+export default Template;
+
+
+// pages/index.tsx
+import React, { useEffect } from "react";
+import Template from "../components/Template";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import MainConent from "../components/MainConent";
+
+const HomePage: React.FC = () => {
+  return (
+    <Template
+      title="Home Page"
+      description="Welcome to our website!"
+      templateType="template3"
+    >
+      <Header componentType="header" />
+      <MainConent componentType="main" />
+      <Footer componentType="footer" />
+    </Template>
+  );
+};
+
+export default HomePage;
+

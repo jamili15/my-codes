@@ -1,0 +1,4 @@
+//press window + r then put it into input
+
+
+shell:startup

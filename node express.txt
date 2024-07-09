@@ -1,0 +1,110 @@
+// DataComponent.tsx
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface Data {
+  id: number;
+  name: string;
+  age: number;
+}
+
+const DataComponent: React.FC = () => {
+  const [data, setData] = useState<Data[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3005/api/data");
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <h2>Data from Server:</h2>
+      <ul>
+        {data.map((item) => (
+          <li key={item.id}>
+            {item.name}
+            {item.age}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default DataComponent;
+
+
+
+
+
+
+
+// server.js
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs').promises;
+const path = require('path');
+const app = express();
+const port = 3005;
+
+const dataFilePath = path.join(__dirname, 'data.json');
+
+// Use the cors middleware
+app.use(cors());
+
+// Sample data route
+app.get('/api/data', async (req, res) => {
+    try {
+        const rawData = await fs.readFile(dataFilePath);
+        const jsonData = JSON.parse(rawData);
+        res.json(jsonData);
+    } catch (error) {
+        console.error('Error reading data file:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+
+
+[
+    { "id": 1, "name": "John Doe", "age": 25 },
+    { "id": 2, "name": "Jane Doe", "age": 30 },
+    { "id": 3, "name": "John Doe", "age": 25 }
+]
+
+
+{
+  "name": "my-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.5",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}
+
+
+

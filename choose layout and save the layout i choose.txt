@@ -1,0 +1,78 @@
+import DefaultQueueTheme from "@/components/queue/DefaultQueueTheme";
+import Theme1 from "@/components/themes/theme1/Theme1";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import Title from "@/components/ui/Title";
+import Button from "@/components/ui/Button";
+import { BsLayoutWtf } from "react-icons/bs";
+
+export default function Home() {
+  const [show, setShow] = useState<number>(0);
+  const [hide, setHide] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Retrieve the saved theme from localStorage when the component mounts
+    const savedTheme = localStorage.getItem("selectedTheme");
+    if (savedTheme) {
+      setShow(parseInt(savedTheme, 10));
+      setHide(true);
+    }
+  }, []);
+
+  const setTheme = (theme: number) => {
+    // Save the selected theme to localStorage
+    localStorage.setItem("selectedTheme", theme.toString());
+    setHide(true);
+    setShow(theme);
+  };
+
+  const goBack = () => {
+    setHide(false);
+    setShow(0); // Reset the show state
+  };
+
+  return (
+    <div>
+      {hide && (
+        <div className=" absolute right-1 top-1">
+          <Button
+            onClick={goBack}
+            className="border-none text-[10px] !p-0"
+            icon={<BsLayoutWtf size={15} />}
+          />
+        </div>
+      )}
+      {!hide && (
+        <div>
+          <Title text="CHOOSE LAYOUT" className="text-xl text-center p-5" />
+          <div className={`flex gap-10 items-center justify-center`}>
+            <Image
+              src={"/images/theme1.png"}
+              alt={""}
+              height={300}
+              width={300}
+              quality={100}
+              className="cursor-pointer"
+              onClick={() => {
+                setTheme(1);
+              }}
+            />
+            <Image
+              src={"/images/default.png"}
+              alt={""}
+              height={300}
+              width={300}
+              quality={100}
+              className="cursor-pointer"
+              onClick={() => {
+                setTheme(2);
+              }}
+            />
+          </div>
+        </div>
+      )}
+      <Theme1 show={show} />
+      <DefaultQueueTheme show={show} />
+    </div>
+  );
+}

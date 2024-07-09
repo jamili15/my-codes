@@ -1,0 +1,39 @@
+##components/fonts/font.tsx
+
+import React, { useEffect } from "react";
+
+const Font = () => {
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+
+  return null;
+};
+
+export default Font;
+
+__________________________________________________________________
+##_app or idex.tsx 
+
+
+import Font from "@/components/fonts/Font";
+
+
+ <Font />
+
+_________________________________________________________________-
+
+##global.css
+
+body {
+  font-family: "Comfortaa", sans-serif;
+  font-optical-sizing: auto;
+}

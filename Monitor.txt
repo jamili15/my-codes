@@ -1,0 +1,57 @@
+import React from "react";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import Template from "../../components/Template";
+import QueueGroup from "../../components/modules/QueueGroup";
+import QueueTv from "../../components/modules/QueueTv";
+import { useRouter } from "next/router";
+import Bpls from "../themes/bpls";
+import Rpt from "../themes/rpt";
+import Tc from "../themes/tc";
+
+const Monitor = () => {
+  const router = useRouter();
+  const group = router.query.group;
+
+  let specificUI = null;
+
+  if (group === "bpls") {
+    specificUI = <Bpls />;
+  } else if (group === "rpt") {
+    specificUI = <Rpt />;
+  } else if (group === "tc") {
+    specificUI = <Tc />;
+  } else {
+    specificUI = (
+      <Template
+        title="Home Page"
+        description="Welcome to our website!"
+        templateType="template1" //there a two templates. { template1 and template2 }. To change the template replace the templateType=" " to template1 or template2.
+      >
+        <Header componentType="header" />
+        <QueueGroup
+          numberOfItems={8}
+          componentType="main-left"
+          orientation="vertical" // available properties horizontal and vertical
+          verticalRows={3}
+          horizontalCols={0}
+        />
+        <QueueTv
+          src={"/videos/example.mp4"}
+          componentType="main-right"
+          layoutType="default" //there a two layouts. { default and custom }. To change the layout replace the layoutType=" " to default or custom.
+        />
+
+        <Footer
+          componentType="footer"
+          groupName={group}
+          groupAddr={"Cebu City"}
+        />
+      </Template>
+    );
+  }
+
+  return <>{specificUI}</>;
+};
+
+export default Monitor;

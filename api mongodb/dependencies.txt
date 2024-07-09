@@ -1,0 +1,35 @@
+Your current IP address (43.226.6.250) has been added to enable local connectivity.
+
+
+
+mongodb+srv://jameskevinramesessystems:Qu3u3ingW3b@cluster0.d5xfwjt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
+
+mongodb+srv://jameskevinramesessystems:<password>@cluster0.d5xfwjt.mongodb.net/
+
+
+
+jameskevinramesessystems
+Qu3u3ingW3b
+
+
+
+
+
+Database name
+queueingweb
+Collection name
+queueingwebcollection
+Additional Preferences
+
+
+##installation
+
+$npm init -y
+
+$npm install cors
+
+$npm install mongodb@4.1.0 --save
+
+$npm install multer --save

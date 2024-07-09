@@ -1,0 +1,32 @@
+import Footer from "@/components/layouts/Footer";
+import Header from "@/components/layouts/Header";
+import React, { ReactNode } from "react";
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  return (
+    <div className="touch-none">
+      <div className="flex flex-col min-h-screen">
+        {/* Header */}
+        <div className="fixed w-full bg-white">
+          <Header logo={"/images/cebu-logo.png"} />
+        </div>
+
+        {/* Main Content */}
+        <main className="flex-1 flex justify-center p-10 sm:pt-[20rem] sm:pb-[10rem] lg:pt-[20rem] lg:pb-[10rem]">
+          {children}
+        </main>
+
+        {/* Footer */}
+        <div className="flex-shrink-0 fixed bottom-0 bg-white w-full">
+          <Footer logo={"/images/etracs-logo.png"} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Layout;

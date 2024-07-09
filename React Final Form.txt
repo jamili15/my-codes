@@ -1,0 +1,257 @@
+// basic React Final Form
+
+"use client";
+
+import { useState } from "react";
+import { Form, Field } from "react-final-form";
+
+type FormData = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export default function Home() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleNext = (values: FormData) => {
+    setFormData(values);
+    setStep(step + 1);
+  };
+
+  const handleBack = () => {
+    setStep(step - 1);
+  };
+
+  const handleSubmit = () => {
+    alert(
+      `Name: ${formData.name}\nEmail: ${formData.email}\nPassword: ${formData.password}`
+    );
+    setStep(1);
+  };
+
+  return (
+    <div>
+      {step === 1 && (
+        <Form
+          initialValues={formData}
+          onSubmit={handleNext}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit} noValidate>
+              <h1>Create User</h1>
+              <div>
+                <label>Name</label>
+                <Field name="name" type="text" component="input" className="" />
+              </div>
+              <div>
+                <label>Email</label>
+                <Field
+                  name="email"
+                  type="email"
+                  component="input"
+                  className=""
+                />
+              </div>
+              <div>
+                <label>Password</label>
+                <Field
+                  name="password"
+                  type="password"
+                  component="input"
+                  className=""
+                />
+              </div>
+              <button type="submit" className="bg-blue-400 p-2">
+                Next
+              </button>
+            </form>
+          )}
+        />
+      )}
+
+      {step === 2 && (
+        <div>
+          <h1>Confirm Information</h1>
+          <p>Name: {formData.name}</p>
+          <p>Email: {formData.email}</p>
+          <p>Password: {formData.password}</p>
+          <button onClick={handleBack} className="bg-gray-400 p-2">
+            Back
+          </button>
+          <button onClick={handleSubmit} className="bg-blue-400 p-2">
+            Submit
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+____________________________________________________________________
+
+
+// with validation
+"use client";
+
+import { useState } from "react";
+import { Form, Field } from "react-final-form";
+
+type FormData = {
+  email: string;
+  password: string;
+  name: string;
+  address: string;
+};
+
+const validatePassword = (password: string) => {
+  const defaultPassword = "54321";
+  return password === defaultPassword;
+};
+
+const required = (value: any) => (value ? undefined : "Required");
+
+export default function Home() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState<FormData>({
+    email: "",
+    password: "",
+    name: "",
+    address: "",
+  });
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  const handleNext = (values: FormData) => {
+    if (step === 1 && !validatePassword(values.password)) {
+      setPasswordError("Incorrect password. Please try again.");
+      return;
+    }
+    setPasswordError(null);
+    setFormData((prevData) => ({ ...prevData, ...values }));
+    setStep(step + 1);
+  };
+
+  const handleBack = () => {
+    setStep(step - 1);
+  };
+
+  const handleSubmit = () => {
+    alert(
+      `Email: ${formData.email}\nPassword: ${formData.password}\nName: ${formData.name}\nAddress: ${formData.address}`
+    );
+    // Reset to the first step or do something else
+    setStep(1);
+    setFormData({ email: "", password: "", name: "", address: "" });
+  };
+
+  return (
+    <div>
+      {step === 1 && (
+        <Form
+          initialValues={formData}
+          onSubmit={handleNext}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit} noValidate>
+              <h1>Step 1: Account Info</h1>
+              <div>
+                <label>Email</label>
+                <Field
+                  name="email"
+                  type="email"
+                  component="input"
+                  className=""
+                  validate={required}
+                />
+              </div>
+              <div>
+                <label>Password</label>
+                <Field
+                  name="password"
+                  type="password"
+                  component="input"
+                  className=""
+                  validate={required}
+                />
+                {passwordError && (
+                  <p style={{ color: "red" }}>{passwordError}</p>
+                )}
+              </div>
+              <button type="submit" className="bg-blue-400 p-2">
+                Next
+              </button>
+            </form>
+          )}
+        />
+      )}
+
+      {step === 2 && (
+        <Form
+          initialValues={formData}
+          onSubmit={handleNext}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit} noValidate>
+              <h1>Step 2: Personal Info</h1>
+              <div>
+                <label>Name</label>
+                <Field
+                  name="name"
+                  type="text"
+                  component="input"
+                  className=""
+                  validate={required}
+                />
+              </div>
+              <div>
+                <label>Address</label>
+                <Field
+                  name="address"
+                  type="text"
+                  component="input"
+                  className=""
+                  validate={required}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleBack}
+                className="bg-gray-400 p-2"
+              >
+                Back
+              </button>
+              <button type="submit" className="bg-blue-400 p-2">
+                Next
+              </button>
+            </form>
+          )}
+        />
+      )}
+
+      {step === 3 && (
+        <div>
+          <h1>Step 3: Confirm Information</h1>
+          <p>Email: {formData.email}</p>
+          <p>Password: {formData.password}</p>
+          <p>Name: {formData.name}</p>
+          <p>Address: {formData.address}</p>
+          <button onClick={handleBack} className="bg-gray-400 p-2">
+            Back
+          </button>
+          <button onClick={handleSubmit} className="bg-blue-400 p-2">
+            Submit
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

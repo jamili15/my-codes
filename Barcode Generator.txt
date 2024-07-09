@@ -1,0 +1,54 @@
+npm install react-barcode
+
+
+import React, { useState } from "react";
+import Barcode from "react-barcode";
+
+const BarcodeGenerator: React.FC = () => {
+  const [barcodeValue, setBarcodeValue] = useState<string>("123456789");
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={barcodeValue}
+        onChange={(e) => setBarcodeValue(e.target.value)}
+        placeholder="Enter barcode value"
+      />
+      <Barcode value={barcodeValue} />
+    </div>
+  );
+};
+
+export default BarcodeGenerator;
+
+
+import Head from "next/head";
+import BarcodeGenerator from "../components/BarcodeGenerator";
+
+const Home: React.FC = () => {
+  return (
+    <div>
+      <Head>
+        <title>Barcode Generator</title>
+        <meta
+          name="description"
+          content="Barcode Generator using Next.js and TypeScript"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main>
+        <h1>Barcode Generator</h1>
+        <BarcodeGenerator />
+      </main>
+
+      <footer>
+        <p>Powered by Next.js and TypeScript</p>
+      </footer>
+    </div>
+  );
+};
+
+export default Home;
+

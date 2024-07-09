@@ -1,0 +1,102 @@
+// ThemeContext.js
+import React, { createContext, useContext, useState } from "react";
+
+type ThemeContextProps = {
+  children: React.ReactNode;
+};
+
+type ThemeContext = {
+  theme: string;
+  toggleTheme: () => void;
+};
+
+const ThemeContext = createContext<ThemeContext | undefined>(undefined);
+
+export const ThemeProvider: React.FC<ThemeContextProps> = ({ children }) => {
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useThemeContext = (): ThemeContext => {
+  const context = useContext(ThemeContext);
+
+  if (!context) {
+    throw new Error("useThemeContext must be used within a ThemeProvider");
+  }
+  return context;
+};
+
+
+_____________________________________________________________________________________________
+
+
+
+
+
+// src/pages/_app.tsx
+import { ThemeProvider } from '../ThemeContext';
+import '../styles/globals.css';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <ThemeProvider>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
+}
+
+export default MyApp;
+
+
+_______________________________________________________________________________________________
+
+
+// ThemedComponent.js
+import React from "react";
+import { useThemeContext } from "@/services/context/theme-context";
+
+const ThemedComponent = () => {
+  const { theme, toggleTheme } = useThemeContext();
+
+  return (
+    <div
+      style={{
+        background: theme === "light" ? "#fff" : "#333",
+        padding: "20px",
+      }}
+    >
+      <p>{`Current theme: ${theme}`}</p>
+      <button onClick={toggleTheme}>Toggle Theme</button>
+    </div>
+  );
+};
+
+export default ThemedComponent;
+
+
+____________________________________________________________________________________________________
+
+
+
+import ThemedComponent from "@/components/ThemedComponent";
+import React from "react";
+
+const context = () => {
+  return (
+    <div>
+      <ThemedComponent />
+    </div>
+  );
+};
+
+export default context;
+

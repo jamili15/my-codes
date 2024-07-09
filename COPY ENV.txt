@@ -1,0 +1,20 @@
+// scripts/copy-env.js
+const fs = require('fs');
+const path = require('path');
+
+const sourcePath = path.join('_custom', '.env.local')
+const destinationPath = path.resolve('.env.local');
+
+try {
+    // Copy .env.local from _custom to root
+    fs.copyFileSync(sourcePath, destinationPath);
+    console.log(`Copied ${sourcePath} to ${destinationPath}`);
+} catch (err) {
+    console.error(`Error copying ${sourcePath} to ${destinationPath}:`, err);
+    process.exit(1);
+}
+
+
+____________________________________________________
+
+"predev": "node copy-env.js",

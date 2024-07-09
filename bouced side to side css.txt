@@ -1,0 +1,16 @@
+.bouncing-animation {
+  animation-name: bounce;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 0.5s;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+}

@@ -1,0 +1,63 @@
+//index or page
+
+import ActionBar from "@/components/layouts/ActionBar";
+import BplsItems from "@/components/transactions/details/Items";
+import BplsLayout from "@/components/transactions/details/Layout";
+import Grid from "@/components/ui/Grid";
+import Title from "@/components/ui/Title";
+import { Bpls, getBpls } from "@/stores/bplsitems";
+
+function BplsPage({ bpls }: { bpls: Bpls[] }) {
+  return (
+    <BplsLayout>
+      <Title text={"Select Transaction"} />
+      <Grid columns={"gap-10"}>
+        {bpls.map((bplsitem) => {
+          return <BplsItems key={bplsitem.id} bpls={bplsitem} />;
+        })}
+      </Grid>
+      <ActionBar backRoute="/menu" className="invisible" />
+    </BplsLayout>
+  );
+}
+
+export default BplsPage;
+
+/*==========================================
+* SERVER SIDE CODE
+==========================================*/
+
+export async function getStaticProps() {
+  const bpls = getBpls();
+
+  return {
+    props: {
+      bpls,
+    },
+  };
+}
+
+
+
+//data from local folder
+
+export type Bpls = { id: string; title: string; disabled: boolean };
+
+export const bplsitem: Bpls[] = [
+  {
+    id: "billing",
+    title: "Business Online Billing and Payment",
+    disabled: false,
+  },
+  { id: "newbusiness", title: "Business Registration", disabled: true },
+  { id: "renewbusiness", title: "Business Application", disabled: true },
+];
+
+export function getBpls() {
+  return bplsitem;
+}
+
+export function getBplsId(id: string | undefined) {
+  return bplsitem.find((bplsitem) => bplsitem.id === id);
+}
+

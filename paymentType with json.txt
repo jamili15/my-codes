@@ -1,0 +1,104 @@
+import React from "react";
+import Modal from "../../ui/Modal";
+import Card from "../../ui/Card";
+import paymentTypeData from "@/stores/paymenttypeitems";
+
+// ... (previous imports)
+
+// ... (previous imports)
+
+const useModal = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [modalContent, setModalContent] = React.useState<any>(null);
+
+  const openModal = (content: any) => {
+    setModalContent(content);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalContent(null);
+    setIsOpen(false);
+  };
+
+  return { isOpen, openModal, closeModal, modalContent };
+};
+
+const PaymentType = () => {
+  const { isOpen, openModal, closeModal, modalContent } = useModal();
+
+  return (
+    <div className="grid grid-cols-2 grid-flow-row gap-10">
+      {paymentTypeData.map((info, index) => (
+        <Card
+          key={index}
+          title={info.title}
+          subtitle={info.subtitle}
+          image={info.image}
+          onClick={() => openModal(info.modalcontent)}
+        />
+      ))}
+
+      {modalContent && (
+        <Modal
+          isOpen={isOpen}
+          onClose={closeModal}
+          image={modalContent.image}
+          imageHeight={modalContent.imageHeight}
+          imageWidth={modalContent.imageWidth}
+          subtitle={modalContent.subtitle}
+          title={modalContent.title}
+          paragraph1={modalContent.paragraph1}
+          paragraph2={modalContent.paragraph2}
+          paragraph3={modalContent.paragraph3}
+          number={modalContent.number}
+          numberLayout={modalContent.numberLayout}
+          textButton={modalContent.textButton}
+        />
+      )}
+    </div>
+  );
+};
+
+export default PaymentType;
+
+
+
+
+
+// data
+const paymentTypeData = [
+  {
+    title: "GCASH",
+    subtitle: "Pay here",
+    image: "/images/gcash.png",
+    modalcontent: {
+      image: "/images/qr.png",
+      imageHeight: 200,
+      imageWidth: 200,
+      title: "Step on how to pay using Gcash:",
+      paragraph1: "1. Open your Gcash and scan the Code.",
+      paragraph2: "2. Pay the exact amount",
+      paragraph3: "3. Wait for the confirmation",
+      textButton: "Confirm",
+    },
+  },
+  {
+    title: "Cashier",
+    subtitle: "Pay Cashier",
+    image: "/images/cashier.png",
+    modalcontent: {
+      image: "/images/qr.png",
+      imageHeight: 200,
+      imageWidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue no.",
+      number: 101,
+      numberLayout: "text-6xl font-semibold",
+      textButton: "Print",
+    },
+  },
+];
+
+export default paymentTypeData;
+

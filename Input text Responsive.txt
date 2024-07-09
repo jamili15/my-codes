@@ -1,0 +1,97 @@
+import React, {
+  useRef,
+  ChangeEvent,
+  useState,
+  InputHTMLAttributes,
+  ChangeEventHandler,
+} from "react";
+import { useKeyboardContext } from "../keyboard/KeyboardContext";
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  className?: string;
+  placeholder?: string;
+  labelLayout?: string;
+  labelText?: string;
+  labelColor?: string;
+  translationUp?: string;
+  translationDown?: string;
+  type?:
+    | "text"
+    | "number"
+    | "email"
+    | "password"
+    | "date"
+    | "tel"
+    | "time"
+    | "file"
+    | "checkbox"
+    | "search";
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+}
+
+interface InputState {
+  value: string | number | readonly string[];
+  focused: boolean;
+}
+
+const Input: React.FC<InputProps> = ({
+  label,
+  className,
+  labelLayout,
+  labelColor,
+  labelText,
+  translationUp,
+  translationDown,
+  placeholder,
+  type = "text",
+  value,
+  onChange,
+  ...props
+}) => {
+  const context = useKeyboardContext();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [inputState, setInputState] = useState<InputState>({
+    value: value || "",
+    focused: false,
+  });
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setInputState((prev) => ({ ...prev, value }));
+    if (onChange) {
+      onChange(event);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <label
+        className={`absolute left-2 px-[5px] transition-transform ${labelLayout} ${
+          (inputState.focused || inputState.value) && !props.readOnly
+            ? `text-blue-500 ${labelColor} ${labelText} -translate-y-3 ${translationUp} bg-white rounded !m-0`
+            : `text-gray-500 translate-y-2 z-[-1] ${translationDown}`
+        }`}
+      >
+        {label}
+      </label>
+      <input
+        type={type}
+        id={type}
+        placeholder={inputState.focused || inputState.value ? "" : placeholder}
+        className={`w-full bg-transparent px-4 py-2 focus:outline-none rounded ${
+          inputState.focused ? "focus:border-blue-500" : "focus:border-primary"
+        } ${className}`}
+        ref={inputRef}
+        onFocus={() => setInputState((prev) => ({ ...prev, focused: true }))}
+        onBlur={() => setInputState((prev) => ({ ...prev, focused: false }))}
+        onClick={(e) => e.stopPropagation()}
+        onChange={handleChange}
+        value={inputState.value}
+        {...props}
+      />
+    </div>
+  );
+};
+
+export default Input;

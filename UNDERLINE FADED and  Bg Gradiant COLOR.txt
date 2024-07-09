@@ -1,0 +1,7 @@
+##underline gradiant
+
+bg-gradient-to-r from-[#335F96]
+
+
+##background gradiant
+bg-gradient-to-r from-[#335f96] via-light-blue to-[#335f96]

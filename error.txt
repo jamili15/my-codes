@@ -1,0 +1,75 @@
+import React, { useState } from "react";
+import PaymentInformation from "@/components/transactions/payment/PaymentInformation";
+import Button from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
+import useTimer from "@/hooks/useTimer";
+
+const PaymentInfo = () => {
+  const timeLimit = 120000;
+  useTimer(timeLimit);
+
+  const [nameValue, setNameValue] = useState<string>("");
+  const [addressValue, setAddressValue] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    textButton: "Confirm",
+    onClick: () => setIsModalOpen(false),
+    showClose: "invisible",
+    image: "/icons/alert.jpg",
+    imageHeight: 200,
+    imageWidth: 200,
+    paragraph1: "",
+  });
+
+  const handleNameChange = (value: string) => {
+    setNameValue(value);
+  };
+
+  const handleAddressChange = (value: string) => {
+    setAddressValue(value);
+  };
+
+  const handleInputChecker = () => {
+    if (nameValue.trim() === "" && addressValue.trim() === "") {
+      setModalContent({
+        ...modalContent,
+        paragraph1: "Please enter your Full Name and Address",
+      });
+      setIsModalOpen(true);
+    } else if (nameValue.trim() === "") {
+      setModalContent({
+        ...modalContent,
+        paragraph1: "Please enter your Full Name",
+      });
+      setIsModalOpen(true);
+    } else if (addressValue.trim() === "") {
+      setModalContent({
+        ...modalContent,
+        paragraph1: "Please enter your Address",
+      });
+      setIsModalOpen(true);
+    } else {
+      window.location.href = `/menu/property/paymentType`;
+    }
+  };
+
+  return (
+    <div className="w-full flex flex-col justify-between items-center">
+      <PaymentInformation
+        onNameChange={handleNameChange}
+        onAddressChange={handleAddressChange}
+      />
+      <div className="text-[30px] gap-20 flex justify-center items-center w-full">
+        <Button text={"Back"} href="/menu/property/billingInfo" />
+        <Button
+          text={"Next"}
+          className="bg-light-blue text-white"
+          onClick={handleInputChecker}
+        />
+      </div>
+      <Modal isOpen={isModalOpen} {...modalContent} />
+    </div>
+  );
+};
+
+export default PaymentInfo;

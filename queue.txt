@@ -1,0 +1,220 @@
+// queue component
+
+import React from "react";
+import Button from "../ui/Button";
+
+interface QueueListProps {
+  text: string;
+  className?: string;
+  onClick?: () => void;
+}
+
+const QueueList: React.FC<QueueListProps> = ({ text, className, onClick }) => {
+  return (
+    <div className="flex justify-center items-center ">
+      <div
+        className={`w-full h-24 flex items-center justify-center  border border-[#335F96] rounded-xl ${className}`}
+      >
+        <Button
+          text={text}
+          className="border-none text-2xl font-bold uppercase w-full h-full"
+          onClick={onClick}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default QueueList;
+
+
+
+//queue index
+
+import React from "react";
+import queueitems from "../../../stores/queueitems";
+import QueueList from "@/components/queue/QueueList";
+import Button from "@/components/ui/Button";
+import useTimer from "@/hooks/useTimer";
+import Modal from "@/components/ui/Modal";
+import router from "next/router";
+
+const useModal = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [modalContent, setModalContent] = React.useState<any>(null);
+
+  const openModal = (content: any) => {
+    setModalContent(content);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalContent(null);
+    setIsOpen(false);
+  };
+
+  return { isOpen, openModal, closeModal, modalContent };
+};
+
+const Index = () => {
+  const timeLimit = 120000;
+  useTimer(timeLimit);
+
+  const { isOpen, openModal, closeModal, modalContent } = useModal();
+
+  return (
+    <div className="w-full flex flex-col justify-between items-center">
+      <div className="text-[45px] px-28 pt-20 grid grid-cols-1 grid-flow-row gap-12">
+        {queueitems.map((info, index) => (
+          <QueueList
+            key={index}
+            text={info.title}
+            onClick={() => openModal(info.modalcontent)}
+          />
+        ))}
+      </div>
+      {modalContent && (
+        <Modal
+          isOpen={isOpen}
+          onClose={closeModal}
+          queuetitle={modalContent.queuetitle}
+          image={modalContent.image}
+          imageHeight={modalContent.imageheight}
+          imageWidth={modalContent.imagewidth}
+          subtitle={modalContent.subtitle}
+          title={modalContent.title}
+          number={modalContent.number}
+          numberLayout={modalContent.numberlayout}
+          textButton={modalContent.textbutton}
+        />
+      )}
+      <div className="text-[30px] gap-20 flex justify-center items-center absolute bottom-48 w-full">
+        <Button
+          text={"Back"}
+          onClick={() => {
+            router.push("/menu");
+          }}
+        />
+        <div className=" invisible">
+          <Button text={"Next"} href="/" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Index;
+
+
+
+//queue data
+
+const queueItems = [
+  {
+    objid: {},
+    title: "Cedula",
+    type: {},
+    modalcontent: {
+      queuetitle: "Cedula",
+      image: "/images/qr.png",
+      imageheight: 200,
+      imagewidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue No.",
+      number: 101,
+      textbutton: "Print",
+    },
+  },
+  {
+    objid: {},
+    title: "Water",
+    type: {},
+    modalcontent: {
+      queuetitle: "Water",
+      image: "/images/qr.png",
+      imageheight: 200,
+      imagewidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue No.",
+      number: 99,
+      textbutton: "Print",
+    },
+  },
+  {
+    objid: {},
+    title: "Construction Permit",
+    type: {},
+    modalcontent: {
+      queuetitle: "Construction Permit",
+      image: "/images/qr.png",
+      imageheight: 200,
+      imagewidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue No.",
+      number: 12,
+      textbutton: "Print",
+    },
+  },
+  {
+    objid: {},
+    title: "Ordinance Violations",
+    type: {},
+    modalcontent: {
+      queuetitle: "Ordinance Violations",
+      image: "/images/qr.png",
+      imageheight: 200,
+      imagewidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue No.",
+      number: 69,
+      textbutton: "Print",
+    },
+  },
+  {
+    objid: {},
+    title: "Vehicle Registration",
+    type: {},
+    modalcontent: {
+      queuetitle: "Vehicle Registration",
+      image: "/images/qr.png",
+      imageheight: 200,
+      imagewidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue No.",
+      number: 14,
+      textbutton: "Print",
+    },
+  },
+  {
+    objid: {},
+    title: "Health Permit",
+    type: {},
+    modalcontent: {
+      queuetitle: "Health Permit",
+      image: "/images/qr.png",
+      imageheight: 200,
+      imagewidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue No.",
+      number: 13,
+      textbutton: "Print",
+    },
+  },
+  {
+    objid: {},
+    title: "Work Permit",
+    type: {},
+    modalcontent: {
+      queuetitle: "Work Permit",
+      image: "/images/qr.png",
+      imageheight: 200,
+      imagewidth: 200,
+      subtitle: "Present this qr code to the cashier",
+      title: "Queue No.",
+      number: 76,
+      textbutton: "Print",
+    },
+  },
+];
+
+export default queueItems;
