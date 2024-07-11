@@ -12,6 +12,8 @@ var CONNECTION_MONGOATLAS = "mongodb+srv://jameskevinramesessystems:Qu3u3ingW3b@
 
 var CONNECTION_MONGOCOMPASS = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.4"
 
+var CONNECTION_SERVER = "mongodb://admin:12p%40ssw0rD%2334@192.168.2.9:27017/"
+
 
 var DATABASE_NAME = "test1";
 var database;
