@@ -38,3 +38,38 @@ for (let i = 1; i <= 5; i++) {
   }
   console.log(i); // Output: 1, 2, 3
 }
+
+
+
+
+__________________ loop of arrays __________________________
+
+
+
+
+  const pages = [
+    {
+      name: "Email Verification",
+      caption: "Email Verification",
+      Component: EmailVerification,
+    },
+    {
+      name: "Ref no",
+      caption: "Initial Information",
+      Component: RefAccount,
+    },
+    {
+      name: "Billing Information",
+      caption: "Billing Information",
+      Component: BillingInfo,
+    },
+    {
+      name: "Payer Information",
+      caption: "Confirm Transaction",
+      Component: PayerInfo,
+    },
+  ];
+
+  for (let Pages of pages) {
+    console.log(Pages.caption);
+  }

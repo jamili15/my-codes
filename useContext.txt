@@ -100,3 +100,125 @@ const context = () => {
 
 export default context;
 
+
+
+_______________________________________________________
+______________ CONTEXT ________________________________
+_______________________________________________________
+
+## context
+
+"use client";
+
+import { createContext, useContext, useState, ReactNode } from "react";
+
+type ContextType = {
+  name: string;
+  color: string;
+  setName: (name: string) => void;
+  setColor: (color: string) => void;
+};
+
+const defaultContextValue: ContextType = {
+  name: "James",
+  color: "#0EA5E9",
+  setName: () => {},
+  setColor: () => {},
+};
+
+const AppContext = createContext<ContextType>(defaultContextValue);
+
+export function AppWrapper({ children }: { children: ReactNode }) {
+  const [name, setName] = useState<string>(defaultContextValue.name);
+  const [color, setColor] = useState<string>(defaultContextValue.color);
+
+  return (
+    <AppContext.Provider value={{ name, color, setName, setColor }}>
+      {children}
+    </AppContext.Provider>
+  );
+}
+
+export function useAppContext() {
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error("useAppContext must be used within an AppWrapper");
+  }
+  return context;
+}
+
+__________________ layout ______________________
+
+ <AppWrapper>{children}</AppWrapper>
+
+
+_________________ Page or Client ____________________
+
+
+
+"use client";
+
+import React, { useEffect } from "react";
+import { useAppContext } from "@/context/Example-context";
+
+const Page = () => {
+  const { name, color, setColor, setName } = useAppContext();
+
+  useEffect(() => {
+    const storedColor = localStorage.getItem("color");
+    const storedName = localStorage.getItem("name");
+
+    if (storedColor) {
+      setColor(storedColor);
+    }
+    if (storedName) {
+      setName(storedName);
+    }
+  }, [setColor, setName]);
+
+  const handleChangeColor = () => {
+    const newColor = "#Ae35e3";
+    setColor(newColor);
+    localStorage.setItem("color", newColor);
+  };
+
+  const handleChangeName = () => {
+    const newName = "Kevin";
+    setName(newName);
+    localStorage.setItem("name", newName);
+  };
+
+  return (
+    <div>
+      <span style={{ backgroundColor: color }}>{name}</span>
+      <button
+        onClick={() => {
+          handleChangeColor();
+        }}
+        className=""
+      >
+        Change color
+      </button>
+      <button
+        onClick={() => {
+          handleChangeName();
+        }}
+        className=""
+      >
+        Change name
+      </button>
+    </div>
+  );
+};
+
+export default Page;
+
+
+
+______________________________________________________
+_____________________Closing__________________________
+______________________________________________________
+
+
+
+
