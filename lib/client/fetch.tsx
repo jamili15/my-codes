@@ -1,4 +1,9 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+import { ServiceOptionType } from "./service";
 
 export type ResponseSuccess = {
   data: any;
@@ -22,7 +27,7 @@ export function isResponseSuccess(data: any): data is ResponseSuccess {
 }
 
 export function isResponseError(data: any): data is ResponseError {
-  return typeof data === "object" && "code" in data && "message" in data;
+  return typeof data === "object" && "code" in data && "error" in data;
 }
 
 export function isResponseRedirect(data: any): data is ResponseRedirect {
@@ -30,15 +35,15 @@ export function isResponseRedirect(data: any): data is ResponseRedirect {
 }
 
 export type FetchRequest = {
-  method: string;
-  data: {
+  method?: string;
+  data?: {
     __partnerid?: string;
-    __service: string;
-    __method: string;
-    __connection: string;
+    __service?: string;
+    __method?: string;
+    __connection?: string;
     [key: string]: any;
   };
-  options: RequestInit;
+  options?: RequestInit;
 };
 
 export const encodeArgs = (param: any) => {
@@ -57,10 +62,15 @@ export const encodeArgs = (param: any) => {
 
 export const getData = async (
   url: string,
-  params = {},
-  options = {}
+  params: Record<string, any> = {},
+  options: Record<string, any> = {}
 ): Promise<ResponseError | ResponseSuccess | ResponseRedirect> => {
-  const searchParams = encodeArgs(params);
+  const args = {
+    method: params.method,
+    serviceName: params.serviceName,
+    ...params.data,
+  };
+  const searchParams = encodeArgs(args);
 
   let res = undefined;
 
@@ -93,11 +103,14 @@ export const getData = async (
   }
 
   try {
-    const data = await res.json();
-    if (data.error || data.status === "ERROR") {
-      return { code: "03", error: data.error || data.msg } as ResponseError;
+    const responseData = await res.json();
+    if (responseData.error || responseData.status === "ERROR") {
+      return {
+        code: "03",
+        error: responseData.error || responseData.msg,
+      } as ResponseError;
     } else {
-      return { data } as ResponseSuccess;
+      return { data: responseData.data } as ResponseSuccess;
     }
   } catch (err) {
     console.error("getData [ERROR] to json: ", res.statusText);
@@ -111,7 +124,7 @@ export const getData = async (
 
 export const postData = async (
   url: string,
-  data: {},
+  data?: {},
   options: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -124,14 +137,8 @@ export const postData = async (
       body: JSON.stringify(data),
       ...options,
     });
-
     if (res.ok) {
-      const data = await res.json();
-      if (data.error) {
-        return { error: data.error };
-      } else {
-        return data;
-      }
+      return await res.json();
     } else {
       return { error: "A data error is encountered. Please try again." };
     }
@@ -145,7 +152,7 @@ export const postData = async (
 
 export const putData = async (
   url: string,
-  data: {},
+  data?: {},
   options: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -189,7 +196,7 @@ export const putData = async (
 
 export const deleteData = async (
   url: string,
-  data: {},
+  data?: {},
   options: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -229,7 +236,7 @@ export const deleteData = async (
 
 export const makeRequest = (
   url: string,
-  request: FetchRequest
+  request: FetchRequest = { method: "GET", data: {} }
 ): Promise<ResponseSuccess | ResponseRedirect | ResponseError> => {
   if ("GET" === request.method) {
     return getData(url, request.data, request.options);
@@ -250,33 +257,49 @@ export const makeRequest = (
   throw Error(`Invalid ${request.method}`);
 };
 
-export const createFetch = (func: () => any) => {
-  return CreateAsyncInternal(func, false);
+export const createFetchAsync = (
+  func: (args: any) => any,
+  serviceName: string,
+  option: ServiceOptionType
+) => {
+  return CreateAsyncInternal(func, serviceName, false, option);
 };
 
 const CreateAsyncInternal = (
-  func: (...params: any[]) => any,
-  initialLoading = false
+  func: (
+    ...params: any[]
+  ) => any | Promise<ResponseSuccess | ResponseRedirect | ResponseError>,
+  serviceName: string,
+  initialLoading = false,
+  option: ServiceOptionType
 ) => {
   const [loading, setLoading] = useState(initialLoading);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [value, setValue] = useState<any | undefined>();
+  const router = useRouter();
 
-  const execute = (...params: any[]) => {
+  const invoke = (...args: any[]) => {
     setLoading(true);
     setProcessing(true);
 
-    return func(...params)
-      .then((data: any) => {
-        if (isResponseError(data)) {
-          setError(data.error);
+    let params = { serviceName, method: args[0], data: {}, option };
+    if (args.length > 1) {
+      params.data = args[1];
+    }
+
+    return func(params)
+      .then((res: any) => {
+        if (isResponseError(res)) {
+          setError(res.error);
           setValue(undefined);
-          return Promise.reject(data.error);
         } else {
-          setValue(data);
+          setValue(res.data);
           setError(undefined);
-          return data;
+          if (res.data.redirect) {
+            router.push(res.data.url);
+          }
+          return res.data;
         }
       })
       .finally(() => {
@@ -285,5 +308,5 @@ const CreateAsyncInternal = (
       });
   };
 
-  return { loading, processing, error, value, execute };
+  return { loading, processing, error, value, invoke };
 };
