@@ -1,0 +1,122 @@
+// create databases
+mysql> CREATE DATABASE your_database_name;
+
+//Select a Database:
+mysql> USE my_new_database;
+
+
+
+___________ Table Commands _______________
+
+//create tables
+mysql> CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    stock INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+//Drop a Database:
+mysql> DROP DATABASE database_name;
+
+//Dropping a Table: To delete a table, use
+mysql> DROP TABLE table_name;
+
+//Show Tables:
+mysql> SHOW TABLES;
+
+
+//Describe a Table Structure:
+mysql> DESCRIBE table_name;
+
+
+//show databases;
+mysql> SHOW DATABASES;
+mysql> USE my_new_database;
+
+//show tables;
+mysql> SHOW TABLES;
+
+
+
+______________Data Manipulation________________
+
+//Insert Data:
+mysql> INSERT INTO products (product_name, price, stock)
+VALUES ('Laptop', 999.99, 50);
+mysql> INSERT INTO products (product_name, price, stock)
+VALUES
+  ('Laptop', 999.99, 50),
+  ('Smartphone', 499.99, 150),
+  ('Tablet', 299.99, 200);
+
+
+mysql> SELECT * FROM table_name;
+
+//Select Data:
+mysql> SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+
+
+_________ update and delete ____________
+
+//Update Data:
+mysql> UPDATE products
+SET price = 899.99, stock = 45
+WHERE product_name = 'Laptop';
+
+
+//Delete Data:
+mysql> DELETE FROM table_name
+WHERE condition;
+
+____________Query Filtering__________
+
+//Where Clause:
+mysql> SELECT * FROM table_name
+WHERE column_name = value;
+
+//Order By
+mysql> SELECT * FROM table_name
+ORDER BY column_name [ASC|DESC];
+
+//Limit Results:
+mysql> SELECT * FROM table_name
+LIMIT number;
+
+____________-Joining Tables_________
+
+//Inner Join:
+mysql> SELECT columns
+FROM table1
+INNER JOIN table2 ON table1.column = table2.column;
+
+//Left Join:
+mysql> SELECT columns
+FROM table1
+LEFT JOIN table2 ON table1.column = table2.column;
+
+/Right Join:
+SELECT columns
+FROM table1
+RIGHT JOIN table2 ON table1.column = table2.column;
+
+
+______________-Index and Constraints__________
+
+//Create Index:
+mysql> CREATE INDEX index_name
+ON table_name (column_name);
+
+//Add Primary Key:
+mysql> ALTER TABLE table_name
+ADD PRIMARY KEY (column_name);
+
+//Add Foreign Key:
+mysql> ALTER TABLE table_name
+ADD CONSTRAINT fk_name
+FOREIGN KEY (column_name) REFERENCES other_table (column_name);
+
+
