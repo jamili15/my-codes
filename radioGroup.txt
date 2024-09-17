@@ -1,37 +1,54 @@
-import React from "react";
+import * as React from "react";
+import Radio from "@mui/material/Radio";
+import MuiRadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import { Field } from "react-final-form";
+
+type RadioOption = {
+  label: string;
+  value: string;
+};
 
 interface RadioGroupProps {
-  options: { label: string; value: string }[];
-  selectedValue: string;
-  onChange: (value: string) => void;
-  className?: string;
+  caption?: string;
+  name: string;
+  groupData: RadioOption[];
 }
 
 const RadioGroup: React.FC<RadioGroupProps> = ({
-  options,
-  selectedValue,
-  onChange,
-  className,
+  caption,
+  name,
+  groupData,
 }) => {
   return (
-    <div className={`flex flex-col gap-5 ${className}`}>
-      {options.map((option) => (
-        <div
-          key={option.value}
-          className="mb-2 text-4xl flex justify-start items-center text-center gap-5"
-        >
-          <input
-            type="radio"
-            id={option.value}
-            value={option.value}
-            checked={selectedValue === option.value}
-            onChange={() => onChange(option.value)}
-            className="mr-5 h-10 w-10" // Customize the size using h-6 and w-6 classes
-          />
-          <label htmlFor={option.value}>{option.label}</label>
-        </div>
-      ))}
-    </div>
+    <FormControl>
+      {caption && <FormLabel>{caption}</FormLabel>}
+      <Field name={name} type="radio">
+        {({ input }) => (
+          <MuiRadioGroup {...input}>
+            {groupData.map((option) => (
+              <FormControlLabel
+                key={option.value}
+                value={option.value}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#018786",
+                      "&.Mui-checked": {
+                        color: "#018786",
+                      },
+                    }}
+                  />
+                }
+                label={option.label}
+              />
+            ))}
+          </MuiRadioGroup>
+        )}
+      </Field>
+    </FormControl>
   );
 };
 
@@ -41,31 +58,24 @@ export default RadioGroup;
 
 
 
+
 index / page.tsx 
 
 
-  const radioOptions = [
-    { label: "Building Permit", value: "Building Permit" },
-    { label: "Occupancy Permit", value: "Occupancy Permit" },
+  const radio = [
+    { label: "Building Permit", value: "buildingpermit" },
+    { label: "Occupancy Permit", value: "occupancypermit" },
   ];
 
 
 
-
-  <Textbox
-        placeholder={`${selectedRadioOption} `}
+     <Text
+        name="refno"
         label="Application No."
-        labelStyle="text-4xl"
-        className="border-2 border-gray-400 w-full"
-        ref={appno}
+        validate={required}
+        variant="standard"
+        required
+        autoComplete="off"
       />
-      <Title
-        text={"Application type :"}
-        textSize="text-4xl capitalize font-normal m-4 text-left"
-      />
-      <RadioGroup
-        options={radioOptions}
-        selectedValue={selectedRadioOption}
-        onChange={handleRadioChange}
-        className="pl-20"
-      />
+
+      <RadioGroup name="apptype" groupData={radio} />
