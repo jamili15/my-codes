@@ -1,0 +1,83 @@
+1. Database Commands:
+show dbs: Lists all available databases.
+use <database>: Switch to a specific database.
+db: Displays the current database name.
+
+
+2. Collection Commands:
+show collections: Lists all collections in the current database.
+db.createCollection(<name>): Creates a new collection.
+db.getCollectionNames(): Lists all collections in the current database.
+
+
+3. Document Operations (CRUD) in Collections:
+db.<collection>.find(query): Finds documents matching the query.
+db.<collection>.findOne(query): Finds the first document that matches the query.
+db.<collection>.insertOne(doc): Inserts a single document into a collection.
+db.<collection>.insertMany([doc1, doc2, ...]): Inserts multiple documents.
+db.<collection>.updateOne(query, update, options): Updates one document.
+db.<collection>.updateMany(query, update, options): Updates multiple documents.
+db.<collection>.deleteOne(query): Deletes one document.
+db.<collection>.deleteMany(query): Deletes multiple documents.
+
+
+4. Indexes:
+db.<collection>.createIndex({ field: 1 }): Creates an index on the specified field (ascending order).
+db.<collection>.getIndexes(): Lists all indexes on the collection.
+db.<collection>.dropIndex("index_name"): Drops an index by its name.
+
+
+5. Aggregation:
+db.<collection>.aggregate([pipeline]): Performs aggregation operations like $group, $match, $sort, etc.
+
+
+6. Administrative Commands:
+show users: Lists all users in the current database.
+show roles: Lists all roles in the current database.
+db.stats(): Displays statistics for the current database.
+db.serverStatus(): Shows the status of the MongoDB server.
+db.currentOp(): Shows active operations on the MongoDB server.
+db.shutdownServer(): Shuts down the MongoDB server (requires admin privileges).
+db.dropDatabase(): Drops the current database.
+
+
+7. User and Role Management:
+db.createUser(user): Creates a new user.
+db.updateUser(username, update): Updates user information.
+db.dropUser(username): Removes a user from the database.
+db.grantRolesToUser(username, roles): Grants roles to a user.
+db.revokeRolesFromUser(username, roles): Revokes roles from a user.
+
+
+8. Utility Commands:
+exit: Exits the mongosh shell.
+cls: Clears the shell screen.
+help: Provides help and lists common commands in mongosh.
+
+
+9. Connection Commands:
+db.getMongo(): Returns the current connection object.
+db.getMongo()._uri: Displays the current connection URI.
+
+
+10. BSON Data Commands:
+ObjectId(<hex_string>): Creates an ObjectId.
+ISODate(): Returns the current date in ISO format.
+Date(): Returns the current date in JavaScript date format.
+
+
+11. Explain Plan:
+db.<collection>.find(query).explain(): Returns the execution plan for the query.
+db.<collection>.find(query).explain("executionStats"): Shows detailed execution statistics.
+
+
+12. Session and Transactions:
+session = db.getMongo().startSession(): Starts a new session.
+session.startTransaction(): Starts a transaction in the session.
+session.commitTransaction(): Commits the current transaction.
+session.abortTransaction(): Aborts the current transaction.
+
+
+13. Shell Helper Commands:
+it: Iterates over a cursor (if find() query returns more than one document).
+var: Allows creating variables in mongosh.
