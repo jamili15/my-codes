@@ -1,7 +1,7 @@
 sx  
 
 
-<TextField
+ <TextField
               label="Specify Amount to Pay"
               variant="outlined"
               defaultValue={formatCurrency(amountToPay, false)}
@@ -16,4 +16,13 @@ sx
                     borderColor: "red", // Change border color when focused
                   },
                 },
+                "& .MuiInputLabel-root": {
+                  "&:hover": {
+                    color: "red", // Change label color on hover
+                  },
+                  "&.Mui-focused": {
+                    color: "red", // Change label color when focused
+                  },
+                },
               }}
+            />
