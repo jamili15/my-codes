@@ -1,0 +1,19 @@
+sx  
+
+
+<TextField
+              label="Specify Amount to Pay"
+              variant="outlined"
+              defaultValue={formatCurrency(amountToPay, false)}
+              onChange={(e) => setAmountToPay(Number(e.target.value))}
+              className="mt-2"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "red", // Change border color on hover
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "red", // Change border color when focused
+                  },
+                },
+              }}
