@@ -2,9 +2,20 @@ ______________Create Database_____________
 
 // create databases
 mysql> CREATE DATABASE your_database_name;
+mysql> CREATE DATABASE your_database_name CHARACTER SET utf8;
 
 //Select a Database:
 mysql> USE my_new_database;
+
+
+______________RESTORE THE BACKUP DATABASE______
+mysql -u root -p -f -D backup_databasename  <  backup_databasename_20240101.sql
+
+
+
+____________ BACKUP DATABASE _______________
+
+mysqldump --max-allowed-packet=16M -u root -p -f backup_databasename > backup_databasename_20240101.sql
 
 
 

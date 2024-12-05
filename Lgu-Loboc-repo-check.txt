@@ -1,0 +1,238 @@
+
+Poloy@IT-COMPUTER MINGW64 ~
+$ ssh poloy@192.168.88.54
+poloy@192.168.88.54's password:
+Welcome to Ubuntu 18.04.6 LTS (GNU/Linux 4.15.0-213-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Tue Oct 15 06:00:24 UTC 2024
+
+  System load:                    0.89
+  Usage of /:                     5.9% of 195.80GB
+  Memory usage:                   16%
+  Swap usage:                     0%
+  Processes:                      204
+  Users logged in:                0
+  IP address for ens18:           192.168.88.54
+  IP address for br-04e51e14db19: 172.19.0.1
+  IP address for docker0:         172.17.0.1
+  IP address for br-e879704f617b: 172.18.0.1
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Infrastructure is not enabled.
+
+7 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+142 additional security updates can be applied with ESM Infra.
+Learn more about enabling ESM Infra service for Ubuntu 18.04 at
+https://ubuntu.com/18-04
+
+
+Last login: Wed Aug 21 05:23:03 2024 from 192.168.88.134
+poloy@etracs_loboc:~$ ls
+10-7-2023.sql  docker  docker1  docker-old-2024-05-07  updated_db.sql
+poloy@etracs_loboc:~$ cd docker
+poloy@etracs_loboc:~/docker$ cd ..
+poloy@etracs_loboc:~$ cd docker1
+poloy@etracs_loboc:~/docker1$ git remote -v
+fatal: not a git repository (or any of the parent directories): .git
+poloy@etracs_loboc:~/docker1$ cd ..
+poloy@etracs_loboc:~$ cd docker
+poloy@etracs_loboc:~/docker$ git remote -v
+origin  https://github.com/ramesesinc/etracs-municipality-deployments.git (fetch)
+origin  https://github.com/ramesesinc/etracs-municipality-deployments.git (push)
+poloy@etracs_loboc:~/docker$ cat _custom/env.conf
+##
+## Git Pass:
+##
+
+lgu_name=MUNICIPALITY OF LOBOC
+
+channel=04729
+channelgroup=etracsbohol
+fileupload_channel=${channel}
+filipizen_group=bohol_loboc
+
+sms_acctname=04729
+sms_apikey=8fe6272b5a1b3f9fb0ad387f3a990ecb
+
+server_ip=192.168.88.54
+app_server_ip=192.168.88.54
+
+pub_app_server_ip=localhost
+
+dbserver_host=192.168.88.54
+dbserver_user=root
+dbserver_pass=P@ssw0rd#
+
+db_etracs=etracs255_loboc
+db_image=etracs_image
+db_notification=etracs_notification
+db_epayment=eor
+db_queue=queue
+
+ROUTE_CUSTOM=0.0.0.0/24 192.168.88.0/24
+poloy@etracs_loboc:~/docker$ git branch
+* bohol-loboc
+poloy@etracs_loboc:~/docker$ git log --graph | head -100
+* commit 91519249b2e60dc850b1fbb4e625ba21d19199c0
+| Author: worgflores <worgflores@gmail.com>
+| Date:   Thu May 9 09:56:57 2024 +0800
+|
+|     etracs: updated the config files
+|
+* commit 6a52302d8b9d0e697732e3577dd430b42b15c41b
+| Author: wflores <wflores@gmail.com>
+| Date:   Tue May 7 06:01:44 2024 +0000
+|
+|     rptis: mounted client and services from build 2.5.04.05.01
+|
+*   commit b0e92e99d8edce96d8bf8e4bb8510d7a15fabce7
+|\  Merge: d8f2f5f8 20aad3bd
+| | Author: worgflores <worgflores@gmail.com>
+| | Date:   Tue May 7 13:29:19 2024 +0800
+| |
+| |     Merge branch 'bohol-loboc' of https://github.com/ramesesinc/etracs-municipality-deployments into bohol-loboc
+| |
+| *   commit 20aad3bd463526abee8f504060a5e197f4db7d0d
+| |\  Merge: 78081332 2dc410de
+| | | Author: Jessie S. Zamora <jzamss@gmail.com>
+| | | Date:   Wed Aug 30 13:50:41 2023 +0800
+| | |
+| | |     Merge branch '2.5.05.02' into bohol-loboc
+| | |
+* | | commit d8f2f5f8533f4e6d91399337c3561bb3e0b67521
+| | | Author: worgflores <worgflores@gmail.com>
+| | | Date:   Thu May 2 11:01:55 2024 +0800
+| | |
+| | |     modified patch scripts
+| | |
+* | | commit d6013df3feb2933f8ef362f0e178cbf966c2a3db
+| | | Author: worgflores <worgflores@gmail.com>
+| | | Date:   Thu May 2 10:50:48 2024 +0800
+| | |
+| | |     added upgrade scripts
+| | |
+* | | commit c7cd11c4e4e03598a5bce573a8417e2b8bed65fb
+| | | Author: worgflores <worgflores@gmail.com>
+| | | Date:   Thu May 2 10:29:53 2024 +0800
+| | |
+| | |     remove
+| | |
+* | | commit c0ff1225d51cd494b63eb81d0be992c3235d0546
+| | | Author: worgflores <worgflores@gmail.com>
+| | | Date:   Thu May 2 10:26:52 2024 +0800
+| | |
+| | |     rptis: mounted client and services of build 2.5.04.05.01
+| | |
+* | |   commit c404d645966f7d33ff084fd4dfde43f5d62f8f1e
+|\ \ \  Merge: 78081332 d565db6d
+| |/ /  Author: worgflores <worgflores@gmail.com>
+|/| |   Date:   Thu May 2 10:11:54 2024 +0800
+| | |
+| | |       Merge remote-tracking branch 'origin/2.5.05.03-14' into staging-20240502
+| | |
+| | |       # Conflicts:
+| | |       #       system/download/docker-compose-ext.yml
+| | |
+| * | commit d565db6d3332b58a61475649a3df9cd18313a1e5
+| | | Author: worgflores <worgflores@gmail.com>
+| | | Date:   Tue Apr 30 08:54:27 2024 +0800
+| | |
+| | |     bpls: updated the cmci sql file
+| | |
+| * |   commit d1711226d275a270738ce0d8728d440e96217fa4
+| |\ \  Merge: 635220ad 285b591f
+| | | | Author: worgflores <worgflores@gmail.com>
+| | | | Date:   Tue Apr 30 08:45:12 2024 +0800
+| | | |
+| | | |     Merge remote-tracking branch 'template-main/2.5.05.03-14' into 2.5.05.03-14
+| | | |
+| | | |     # Conflicts:
+| | | |     #       appserver/etracs/docker-compose-ext.yml
+| | | |     #       appserver/etracs/docker-compose.yml
+| | | |
+| | * | commit 285b591f79f3acce50a3d612357d9e41dbe40810
+| | | | Author: worgflores <worgflores@gmail.com>
+| | | | Date:   Mon Apr 29 16:22:31 2024 +0800
+| | | |
+| | | |     epayment: added EPaymentRepostService
+| | | |
+| | * | commit 0e00bb4a3e887f8233298077582274d33cf7525d
+| | | | Author: worgflores <worgflores@gmail.com>
+| | | | Date:   Mon Apr 29 16:19:49 2024 +0800
+| | | |
+| | | |     updates:
+| | | |
+| | | |     - added generateCode method to CashReceiptBarcodeService
+| | | |     - mounted client updates for core and entity
+| | | |
+| * | | commit 635220add956039f94c2091fcf149a9b5b9e5329
+| | | | Author: worgflores <worgflores@gmail.com>
+| | | | Date:   Tue Apr 30 08:34:17 2024 +0800
+| | | |
+| | | |     bpls: bug fixed on OnlineBusinessApplicationService
+| | | |
+| * | | commit 3529a31f5db7090b46113e4407416caac08d032d
+| | | | Author: worgflores <worgflores@gmail.com>
+poloy@etracs_loboc:~/docker$ git status
+On branch bohol-loboc
+Your branch is up to date with 'origin/bohol-loboc'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        appserver/etracs/docker-compose-ext.yml.save
+
+nothing added to commit but untracked files present (use "git add" to track)
+poloy@etracs_loboc:~/docker$ git diff | head -100
+poloy@etracs_loboc:~/docker$ git diff | head -1000
+poloy@etracs_loboc:~/docker$ docker ps -a
+CONTAINER ID   IMAGE                                             COMMAND                  CREATED         STATUS      PORTS                                                                                                                                       NAMES
+da2aa7254c0a   ramesesinc/etracs-server-municipality:2.5.05.02   "/bin/bash /apps/sta…"   7 weeks ago     Up 7 days   0.0.0.0:8060-8061->8060-8061/tcp, :::8060-8061->8060-8061/tcp, 0.0.0.0:8070->8070/tcp, :::8070->8070/tcp, 8080/tcp                          etracs-server
+d162c7e0589c   ramesesinc/etracs-client-municipality:2.5.05.03   "docker-entrypoint.s…"   5 months ago    Up 7 days   0.0.0.0:8170->8170/tcp, :::8170->8170/tcp                                                                                                   etracs-client
+226e92fef167   ramesesinc/mail-server:1.01                       "/usr/local/bin/dumb…"   5 months ago    Up 7 days   0.0.0.0:2527->25/tcp, :::2527->25/tcp                                                                                                       mail-bpls
+fd562c34d9b6   ramesesinc/mail-server:1.01                       "/usr/local/bin/dumb…"   5 months ago    Up 7 days   0.0.0.0:2525->25/tcp, :::2525->25/tcp                                                                                                       mail-primary
+0862debefaf0   ramesesinc/gdx-client:1.05                        "/bin/bash /apps/sta…"   5 months ago    Up 7 days   0.0.0.0:8571->8571/tcp, :::8571->8571/tcp                                                                                                   gdx-client
+73a5da136559   ramesesinc/gdx-proxy-server:v006                  "/docker-entrypoint.…"   5 months ago    Up 7 days   0.0.0.0:7000->80/tcp, 0.0.0.0:8500->80/tcp, :::7000->80/tcp, :::8500->80/tcp                                                                gdx-proxy-server
+d365810c05ed   ramesesinc/local-epayment-server:2.5.01.02.06     "/bin/bash /apps/sta…"   5 months ago    Up 7 days   0.0.0.0:8095->8070/tcp, :::8095->8070/tcp                                                                                                   epayment-server
+f2cd569ed256   ramesesinc/etracs-web:2.5.02.01                   "/bin/bash /apps/sta…"   5 months ago    Up 7 days   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp                                                                                                   etracs-web
+ca623f7c329e   ramesesinc/queue-server:2.5.02.01                 "/bin/bash /apps/sta…"   5 months ago    Up 7 days   8061/tcp, 0.0.0.0:9960->8060/tcp, :::9960->8060/tcp, 0.0.0.0:9970->8070/tcp, :::9970->8070/tcp, 0.0.0.0:9980->8080/tcp, :::9980->8080/tcp   queue-server
+4ffddf3d340c   nginx:latest                                      "/docker-entrypoint.…"   5 months ago    Up 7 days   0.0.0.0:9999->80/tcp, :::9999->80/tcp                                                                                                       queue-proxy
+0821ac4c65ea   ramesesinc/notification-server:1.0                "docker-entrypoint.s…"   5 months ago    Up 7 days   0.0.0.0:7080->8080/tcp, :::7080->8080/tcp                                                                                                   rameses-notification-server
+6567d833ccd9   nginx:latest                                      "/docker-entrypoint.…"   5 months ago    Up 7 days   0.0.0.0:80->80/tcp, :::80->80/tcp, 0.0.0.0:8000->80/tcp, :::8000->80/tcp                                                                    download-server
+4afbd4b70f61   portainer/portainer-ce                            "/portainer"             13 months ago   Up 7 days   8000/tcp, 9443/tcp, 0.0.0.0:9000->9000/tcp, :::9000->9000/tcp                                                                               portainer
+poloy@etracs_loboc:~/docker$ docker images
+REPOSITORY                              TAG            IMAGE ID       CREATED         SIZE
+nginx                                   latest         1d668e06f1e5   5 months ago    188MB
+ramesesinc/gdx-proxy-server             v006           d342444bf764   9 months ago    187MB
+ramesesinc/etracs-client-municipality   2.5.05.03      ad971363d125   9 months ago    191MB
+ramesesinc/etracs-server-municipality   2.5.05.03      a325a912e433   9 months ago    183MB
+ramesesinc/etracs-client-main           2.5.05.03      77b1d89c82f9   9 months ago    160MB
+ramesesinc/etracs-server-main           2.5.05.03      d994a024f3da   9 months ago    183MB
+ramesesinc/gdx-client                   1.05           f1ebbda1ed0e   13 months ago   172MB
+portainer/portainer-ce                  latest         9ecc2a9e02ca   15 months ago   277MB
+portainer/helper-reset-password         latest         c56588a8080c   17 months ago   43.5MB
+ramesesinc/etracs-server-municipality   2.5.05.02      fc03a7cf6669   18 months ago   177MB
+ramesesinc/mail-server                  1.01           6ec78652c153   2 years ago     191MB
+ramesesinc/gdx-client                   1.04.03        efba9f4ea0e0   2 years ago     174MB
+ramesesinc/gdx-proxy-server             v004           ac272443b193   2 years ago     133MB
+ramesesinc/local-epayment-server        2.5.01.02.06   81be8a28a405   3 years ago     189MB
+ramesesinc/etracs-web                   2.5.02.01      db18909cb4b5   3 years ago     177MB
+ramesesinc/node-download-server         0.0.3          68d1fcf48059   3 years ago     93.2MB
+ramesesinc/queue-server                 2.5.02.01      f914c7ebe04f   3 years ago     215MB
+ramesesinc/notification-server          1.0            0327153a182b   5 years ago     83.3MB
+poloy@etracs_loboc:~/docker$ exit
+logout
+Connection to 192.168.88.54 closed.
+
+Poloy@IT-COMPUTER MINGW64 ~
+$
