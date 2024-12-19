@@ -1,0 +1,67 @@
+// components/SlideMessage.tsx
+import { useEffect, useState } from 'react';
+
+type SlideMessageProps = {
+  message: string;
+  duration?: number; // Duration for one loop of the slide (in milliseconds)
+};
+
+const SlideMessage = ({ message, duration = 5000 }: SlideMessageProps) => {
+  return (
+    <div
+      className="fixed top-1/2 left-0 transform -translate-y-1/2 p-4 bg-blue-500 text-white rounded-lg animate-slide"
+      style={{ animationDuration: `${duration}ms` }}
+    >
+      {message}
+    </div>
+  );
+};
+
+export default SlideMessage;
+
+
+
+
+
+
+
+
+/* styles/globals.css */
+@keyframes slide-left-to-right {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-slide {
+  animation: slide-left-to-right linear infinite;
+}
+
+
+
+
+// pages/index.tsx or another component
+import { useEffect, useState } from 'react';
+import SlideMessage from '@/components/SlideMessage';
+
+const HomePage = () => {
+  const [message, setMessage] = useState<string>('');
+
+  useEffect(() => {
+    // Automatically trigger the slide message after 1 second
+    setTimeout(() => {
+      setMessage('This is a running message sliding from left to right!');
+    }, 1000);
+  }, []);
+
+  return (
+    <div className="relative min-h-screen flex items-center justify-center">
+      {message && <SlideMessage message={message} duration={8000} />}
+    </div>
+  );
+};
+
+export default HomePage;
